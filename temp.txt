@@ -1,0 +1,8 @@
+indexRos = rows number
+indexCols = columns number
+
+X       0       1       2       3
+0       85*0+X  85*1+X  85*2+X  85*3+X
+43      85*0+X  85*1+X  85*2+X  85*3+X
+0       85*0+X  85*1+X  85*2+X  85*3+X
+43      85*0+X  85*1+X  85*2+X  85*3+X
