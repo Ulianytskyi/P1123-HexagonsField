@@ -1,3 +1,9 @@
+body {
+    background-color: #72ffa7;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
 .hex {
     position: absolute;
     background-image: url("hex.png");
@@ -6,8 +12,18 @@
     background-position: center;
     width: 86px;
     height: 100px;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
 }
-
 .hide {
     display: none;
+}
+.img-knight {
+    position: relative;
+    width: 30px;
+    pointer-events: none;
 }

@@ -1,5 +1,9 @@
 const container = document.getElementById("container");
 
+let imgPlayer = `<img src='knight.png' id='knight' class='img-knight'>`;
+let imgHex = `url(hex.png)`;
+let imgCurHex = `url(hex-selected.png)`;
+
 const hexField = document.createElement("div");
 hexField.className = "hex-field";
 container.appendChild(hexField);
@@ -48,53 +52,65 @@ function createHexagonField(rowsNumber, columnsNumber) {
   }
 }
 
-createHexagonField(5, 5);
+createHexagonField(4, 8);
+
+const hexArr = document.querySelectorAll(".hex");
+let randomNumber = Math.floor(Math.random() * hexArr.length) + 1;
+hexArr[randomNumber].innerHTML = imgPlayer;
 
 let selectedHex = null;
 let isMovable = true;
+let playerSign = null;
 
 function hexSelection(event) {
   const currentHex = event.target;
+
+  isMovable = checkMovable(currentHex, selectedHex);
+
+  if (selectedHex == null && currentHex.innerHTML != "") {
+    currentHex.style.backgroundImage = imgCurHex;
+    selectedHex = currentHex;
+    playerSign = currentHex.innerHTML;
+  } else if (isMovable && selectedHex != null && selectedHex != currentHex) {
+    currentHex.style.backgroundImage = imgCurHex;
+    selectedHex.style.backgroundImage = imgHex;
+    selectedHex.innerHTML = "";
+    currentHex.innerHTML = playerSign;
+    selectedHex = currentHex;
+  } else if (selectedHex == currentHex) {
+    currentHex.style.backgroundImage = imgHex;
+    selectedHex.style.backgroundImage = imgHex;
+    selectedHex = null;
+  }
+}
+
+function checkMovable(currentHex, selectedHex) {
   if (currentHex && selectedHex) {
     let currHexCoords = currentHex.dataset.coords.split("-");
     let selectedHexCoords = selectedHex.dataset.coords.split("-");
 
-    let aX, aY, bX, bY;
-    aY = selectedHexCoords[0];
-    aX = selectedHexCoords[1];
-    bY = currHexCoords[0];
-    bX = currHexCoords[1];
+    let aY = selectedHexCoords[0];
+    let aX = selectedHexCoords[1];
+    let bY = currHexCoords[0];
+    let bX = currHexCoords[1];
 
     if (
-      (bY == aY && bX == aX - 1) ||
-      (bY == aY && -bX == -aX - 1) ||
-      (bY == aY - 1 && bX == aX) ||
-      (-bY == -aY - 1 && bX == aX)
-      // ||
-      // (aY % 2 == 1 && bY == aY - 1 && -bX == -aX - 1) ||
-      // (aY % 2 == 1 && -bY == -aY - 1 && bX == aX - 1) ||
-      // (aY % 2 == 1 && -bY == -aY - 1 && -bX == -aX - 1) ||
-      // (aY % 2 == 0 && bY == aY - 1 && bX == aX - 1)
+      (bY == aY && bX == aX - 1) || //left
+      (bY == aY && -bX == -aX - 1) || //right
+      (bY == aY - 1 && bX == aX) || //up
+      (-bY == -aY - 1 && bX == aX) || //down
+      (aY % 2 == 1 && bY == aY - 1 && -bX == -aX - 1) || // 1> right-up
+      (aY % 2 == 0 && -bY == -aY - 1 && bX == aX - 1) || // 0> left-down
+      (aY % 2 == 1 && -bY == -aY - 1 && -bX == -aX - 1) || // 1> right-down
+      (aY % 2 == 0 && bY == aY - 1 && bX == aX - 1) // 1> left-up
     ) {
-      // console.log(aY, aX, "_", bY, bX);
-      console.log("Ok----------------");
-      isMovable = true;
+      return true;
     } else {
-      isMovable = false;
-      console.log(aY, aX, "_", bY, bX);
+      return false;
     }
   }
-
-  if (selectedHex == null) {
-    currentHex.style.backgroundImage = `url(hex-red.png)`;
-    selectedHex = currentHex;
-  } else if (isMovable && selectedHex != null && selectedHex != currentHex) {
-    currentHex.style.backgroundImage = `url(hex-red.png)`;
-    selectedHex.style.backgroundImage = `url(hex.png)`;
-    selectedHex = currentHex;
-  } else if (selectedHex == currentHex) {
-    currentHex.style.backgroundImage = `url(hex.png)`;
-    selectedHex.style.backgroundImage = `url(hex.png)`;
-    selectedHex = null;
-  }
 }
+
+document.getElementById("knight").addEventListener("click", (event) => {
+  event.stopPropagation();
+});
